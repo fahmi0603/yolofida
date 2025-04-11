@@ -43,7 +43,7 @@
     <h2 class="fw-bold text-uppercase">Hasil Deteksi</h2>
     {% if hasil_deteksi %}
         <video width="720" controls autoplay muted>
-            <source src="{{ url_for('static', filename=hasil_deteksi) }}" type="video/mp4">
+            <source src="{{ request.host_url }}static/{{ hasil_deteksi }}" type="video/mp4">
             Browser Anda tidak mendukung video tag.
         </video>
         <p><a href="{{ url_for('static', filename=hasil_deteksi) }}" download>⬇️ Unduh Video</a></p>
