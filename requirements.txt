@@ -1,0 +1,8 @@
+flask
+opencv-python
+torch
+ultralytics
+gunicorn
+gdown
+gradio
+numpy

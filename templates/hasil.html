@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deteksi Video - YOLO & OpenCV</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/Icon.png') }}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/Boostrap.css') }}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}"><b>DETEKSI BUAH</b></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('deteksi') }}">Deteksi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('kamera') }}">Kamera</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<!-- Hero -->
+    <section class="hero py-5 text-center text-white" style="background: url('{{ url_for('static', filename='images/Backgroud2.jpg') }}') no-repeat center center/cover;">
+        <div class="container-hero">
+    <h2 class="fw-bold text-uppercase">Hasil Deteksi</h2>
+    {% if hasil_deteksi %}
+        <video controls>
+            <source src="{{ url_for('static', filename=hasil_deteksi) }}" type="video/mp4">
+            Browser Anda tidak mendukung video tag.
+        </video>
+    {% else %}
+        <p>Deteksi gagal atau belum ada hasil.</p>
+    {% endif %}
+    <br>
+    <a href="{{ url_for('index') }}">Kembali ke Halaman Utama</a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-center text-white py-3">
+    <p>&copy; 2025 Deteksi Buah | Dibuat dengan ❤️</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
