@@ -41,7 +41,36 @@
     <section class="hero py-5 text-center text-white" style="background: url('{{ url_for('static', filename='images/Backgroud3.jpg') }}') no-repeat center center/cover;">
         <div class="container-hero">
         <h2 class="fw-bold text-uppercase">Deteksi Buah via Kamera</h2>
-        <img src="{{ url_for('video_feed') }}" class="kamera img-fluid border rounded mt-3" alt="Kamera Real-Time">
+        <video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" style="display:none;"></canvas>
+<img id="output" width="640" height="480" />
+
+<script>
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        const video = document.getElementById('video');
+        video.srcObject = stream;
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        setInterval(() => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            fetch('/proses_kamera', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(res => res.blob())
+            .then(blob => {
+                document.getElementById('output').src = URL.createObjectURL(blob);
+            });
+        }, 1000); // kirim tiap 1 detik
+    });
+</script>
+
+        {% comment %} <img src="{{ url_for('video_feed') }}" class="kamera img-fluid border rounded mt-3" alt="Kamera Real-Time"> {% endcomment %}
         <a href="{{ url_for('index') }}" class="mt-3">Kembali ke Halaman Utama</a>
         </div>
     </section>
