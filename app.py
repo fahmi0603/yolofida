@@ -46,7 +46,7 @@ def upload():
 
 def deteksi_video(input_path, output_path):
     cap = cv2.VideoCapture(input_path)
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')  # Lebih kompatibel lintas platform
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Lebih kompatibel lintas platform
     fps = int(cap.get(cv2.CAP_PROP_FPS)) or 30  # Jika FPS 0, gunakan 30 FPS
     width, height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     
