@@ -39,7 +39,9 @@ def upload():
     file.save(filepath)
 
     # Jalankan deteksi YOLO pada video
-    hasil_video = os.path.join('static', 'hasil_deteksi.mp4')
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    hasil_video = os.path.join(basedir, 'static', 'hasil_deteksi.mp4')
+    # hasil_video = os.path.join('static', 'hasil_deteksi.mp4')
     deteksi_video(filepath, hasil_video)
 
     return render_template('hasil.html', hasil_deteksi='hasil_deteksi.mp4')
