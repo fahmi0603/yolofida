@@ -3,11 +3,6 @@ from ultralytics import YOLO
 import cv2
 import os
 import subprocess
-import base64
-from io import BytesIO
-from PIL import Image
-import numpy as np
-from flask import request, jsonify, send_file
 
 app = Flask(__name__)
 
@@ -85,27 +80,24 @@ def convert_to_h264(input_path, output_path):
 def kamera():
     return render_template('kamera.html')
 
-def proses_kamera():
-    data = request.get_json()
-    if 'image' not in data:
-        return jsonify({'error': 'Tidak ada gambar'}), 400
+def gen_frames():
+    cap = cv2.VideoCapture(0)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = model(frame_rgb)
+        frame_bgr = cv2.cvtColor(results[0].plot(), cv2.COLOR_RGB2BGR)
+        _, buffer = cv2.imencode('.jpg', frame_bgr)
+        frame_bytes = buffer.tobytes()
 
-    # Decode Base64 image
-    encoded_data = data['image'].split(',')[1]
-    image_bytes = base64.b64decode(encoded_data)
-    image = Image.open(BytesIO(image_bytes)).convert("RGB")
-    frame = np.array(image)
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
-    # Jalankan deteksi YOLO
-    results = model(frame)
-    detected_frame = results[0].plot()  # sudah dalam RGB
-
-    # Convert ke JPEG
-    _, buffer = cv2.imencode('.jpg', detected_frame)
-    return send_file(BytesIO(buffer), mimetype='image/jpeg')
 @app.route('/video_feed')
 def video_feed():
-    return Response(proses_kamera(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
