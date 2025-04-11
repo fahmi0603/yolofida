@@ -1,7 +1,6 @@
 venv/
 __pycache__/
 *.pyc
-uploads/
 *.mp4
 *.avi
 *.mov
