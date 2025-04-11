@@ -42,7 +42,7 @@
         <div class="container-hero">
     <h2 class="fw-bold text-uppercase">Hasil Deteksi</h2>
     {% if hasil_deteksi %}
-        <video width="720" controls>
+        <video width="720" controls autoplay muted>
             <source src="{{ url_for('static', filename=hasil_deteksi) }}" type="video/mp4">
             Browser Anda tidak mendukung video tag.
         </video>
