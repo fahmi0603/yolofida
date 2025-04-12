@@ -3,6 +3,9 @@ from ultralytics import YOLO
 import cv2
 import os
 import subprocess
+import base64
+import numpy as np
+from flask import jsonify
 
 app = Flask(__name__)
 
@@ -98,7 +101,23 @@ def gen_frames():
 @app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/deteksi_kamera', methods=['POST'])
+def deteksi_kamera():
+    data = request.get_json()
+    image_data = data['image'].split(',')[1]
+    image_bytes = base64.b64decode(image_data)
 
+    nparr = np.frombuffer(image_bytes, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    results = model(img_rgb)
+    img_bgr = cv2.cvtColor(results[0].plot(), cv2.COLOR_RGB2BGR)
+
+    _, buffer = cv2.imencode('.jpg', img_bgr)
+    img_base64 = base64.b64encode(buffer).decode('utf-8')
+
+    return jsonify({'image': img_base64})
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
