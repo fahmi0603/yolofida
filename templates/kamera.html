@@ -48,10 +48,20 @@
         const output = document.getElementById('output');
         const ctx = canvas.getContext('2d');
 
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            });
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { exact: "environment" } }
+        })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            // Kalau gagal pakai kamera belakang, fallback ke kamera default
+            console.warn("Kamera belakang tidak tersedia, gunakan default.");
+            return navigator.mediaDevices.getUserMedia({ video: true });
+        })
+        .then(stream => {
+            if (stream) video.srcObject = stream;
+        });
 
         setInterval(() => {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
