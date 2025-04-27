@@ -14,7 +14,7 @@ os.makedirs('uploads', exist_ok=True)
 os.makedirs('static', exist_ok=True)
 
 # Load model YOLO
-MODEL_PATH = "model/beest.pt"
+MODEL_PATH = "model/bbest.pt"
 model = YOLO(MODEL_PATH)
 
 @app.route('/')
