@@ -66,7 +66,7 @@ def deteksi_video(input_path, output_path):
             break
 
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = model(frame_rgb)
+        results = model(frame_rgb, conf=0.5)
         frame_bgr = cv2.cvtColor(results[0].plot(), cv2.COLOR_RGB2BGR)
 
         out.write(frame_bgr)
@@ -90,7 +90,7 @@ def gen_frames():
         if not ret:
             break
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = model(frame_rgb)
+        results = model(frame_rgb, conf=0.5)
         frame_bgr = cv2.cvtColor(results[0].plot(), cv2.COLOR_RGB2BGR)
         _, buffer = cv2.imencode('.jpg', frame_bgr)
         frame_bytes = buffer.tobytes()
@@ -111,7 +111,7 @@ def deteksi_kamera():
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    results = model(img_rgb)
+    results = model(img_rgb, conf=0.5)
     img_bgr = cv2.cvtColor(results[0].plot(), cv2.COLOR_RGB2BGR)
 
     _, buffer = cv2.imencode('.jpg', img_bgr)
