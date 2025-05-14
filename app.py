@@ -93,8 +93,24 @@ def gabungkan_prediksi(frame):
         cls_id = det['cls']
         label = f"{LABELS[cls_id]} ({det['conf']:.2f})"
         color = (0, 255, 0) if 'Segar' in LABELS[cls_id] else (0, 0, 255)
+
+        # Ukuran teks berdasarkan tinggi bounding box
+        box_height = y2 - y1
+        font_scale = max(0.4, min(0.6, box_height / 300))
+        thickness = 1
+
+        # Ukuran label teks
+        (text_width, text_height), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)
+
+        # Latar belakang teks
+        y_text = y1 - 10 if y1 - 10 > 10 else y1 + text_height + 10
+        cv2.rectangle(frame, (x1, y_text - text_height - 4), (x1 + text_width + 2, y_text + baseline - 4), color, -1)
+
+        # Teks label (warna hitam agar kontras)
+        cv2.putText(frame, label, (x1, y_text), cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), thickness)
+
+        # Kotak deteksi
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-        cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
     return frame
 
