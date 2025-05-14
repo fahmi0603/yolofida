@@ -92,12 +92,13 @@ def gabungkan_prediksi(frame):
         x1, y1, x2, y2 = map(int, det['xyxy'])
         cls_id = det['cls']
         label = f"{LABELS[cls_id]} ({det['conf']:.2f})"
-        color = (0, 255, 0) if 'Segar' in LABELS[cls_id] else (0, 0, 255)
+        color = (0, 255, 255) if 'Segar' in LABELS[cls_id] else (0, 0, 255)
+
 
         # Ukuran teks berdasarkan tinggi bounding box
         box_height = y2 - y1
         font_scale = max(0.4, min(0.6, box_height / 300))
-        thickness = 1
+        thickness = 2
 
         # Ukuran label teks
         (text_width, text_height), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)
